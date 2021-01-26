@@ -1,0 +1,55 @@
+---
+title: "Workflow Open Assignment"
+output: html_notebook
+---
+
+###
+
+## 1. Input
+
+http://data.insideairbnb.com/the-netherlands/north-holland/amsterdam/2020-12-12/visualisations/listings.csv
+
+http://data.insideairbnb.com/the-netherlands/north-holland/amsterdam/2020-11-03/visualisations/listings.csv
+
+Noemen dat je de data niet in Excel kan openen (capped at 1.04M rows)
+
+
+They're all named listings.csv -> change name
+
+* voor elke listing 365 calendar data points
+
+Bijv. 12-12-2020 -> 13-12-2020 tot en met 14-12-2021;
+* kun je zelf ook proberen (je kunt niet verder terugscrollen in de kalender)
+
+data-is-day-blocked attribute
+
+Availble
+t = beschikbaar
+f = niet beschikbaar
+
+**Aantal reserveringen**
+Als de (kamer, datum) combinatie een keer "t" is geweest en in het vervolg "f" is dat beschouwen als een reservering
+
+DATA STRUCTUUR
+LISTING DATE January, Feb, March
+XXX 10-08-2020, T, F, F
+
+Aannemen dat iedereen zijn calendar consequent bijhoudt en voor false kiest als ze ook niet willen verhuren
+
+* Think of possible flaws of this approach
+Rekening houden met dat ze hun calendar nog moeten updaten
+
+https://nos.nl/artikel/2328181-woning-via-airbnb-verhuren-in-den-haag-verboden-gemeente-gaat-beboeten.html
+https://www.rtlnieuws.nl/nieuws/nederland/artikel/5184808/airbnb-rechtszaken-tuinhuis-belastingdienst
+* max 30 dagen (bijv. als je zelf op vakantie gaat)
+* box 1 belasting
+* woningen mogen niet structureel worden onttrokken
+
+* Opdracht om te checken of mensen zich hieraan houden (30 dagen grens)
+
+
+## 2. Transformation
+listing_id, date,
+
+
+## 3. Output
