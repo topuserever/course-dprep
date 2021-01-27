@@ -114,41 +114,60 @@ In other words, the likelihood of getting a review may not be uniform across all
 **Exercise 4**  
 Create a file `clean.R` that loads the data from the `data` directory and reshapes the data into the following format: 
 
-| `date` | `neighborhood` | `num_reviews` |
+| date | neighbourhood | num_reviews |
 | :---- | :---- | :---- |
-| 01-01-2019 | Centrum-West | 4 | 
-| 02-01-2019 | Centrum-West | 9 | 
+| 2015-01-01 | Bijlmer-Centrum | 43 | 
+| 2015-02-01 | Bijlmer-Centrum | 94 | 
 | ... | ... | .... | 
-| 13-12-2020 | Bijlmer-Centrum | 2 |  
+| 2020-12-01 | Zuid | 23 |  
 
 
 Please follow the guidelines below:  
 
 * Convert the date column of `reviews` into date/time format.
-* Filter for `reviews` published since January 1st 2019 (we use roughly one year of data as a pre-covid period).
+* Filter for `reviews` published since January 1st 2015
 * Filter for `listings` that have received at least 1 review.
 * Merge the `reviews` and `listings` dataframes on a common column.
-* Group the number of reviews by date and neighborhood.
+* Group the number of reviews by date and neighborhood (aggregated on a monthly level). 
+* Store the final data frames in `gen/data-preparation` as `aggregated_df.csv`
 
 \
 
 ### 3. Output
 
-**Exercise 5**  
+**Exercise 5**   
+Create the following three deliverables: 
 
-* Simple lagged timeseries model
-  * Bookings = bookings 12 months ago + .. + price + room type dummy + COVID dummy
-  * Export results with stargazer library (link to building block)
+1. A pivot table that has the following format (vertical: dates, horizontal: neighbourhoods). Store it as `pivot_table.csv` in `gen/analysis`. 
+
+| date | Bijlmer-Centrum | Bijlmer-Oost | ... | Zuid | 
+| :--- | :--- |:--- |:--- | :--- |
+| 2015-01-01 | ... | ... | ... | ... |
+| 2015-02-01 | ... | ... | ... | ... |
+| ... | ... | ... | ... | ... |
+| 2020-12-01 | ... | ... | ... | ... |
+
 
 \
+
+2. A time-series plot that shows the total number of reviews over time (across all neighborhoods). Add a plot title and axes labels to make your graph easier to read. Store it as `plot_all.pdf` in `gen/analysis`.
+
+* Import the data from `gen/data-preparation/aggregated_df.csv`
+* Convert the `date` column into date format.
+* Group by date and calculate the sum of all reviews across neighourhoods.
+* Plot the chart and store the visualisation.
+
+
+\
+
+3. A time-series plot that shows the total number of reviews over time for the top 3 neighborhoods (Centrum-West, De Pijp - Rivierenbuurt, and De Baarsjes - Oud-West). Add a plot title, axes labels, and a legend to make your graph easier to read. Store it as `plot_Amsterdam.pdf` in `gen/analysis`.
+
+* Import the data from `gen/data-analysis/pivot_table.csv`
+* Convert the `date` column into date format.
+* Plot the chart and store the visualisation.
+
 
 **Exercise 6**  
-* Create plot and store in `gen` directory
-* Reference to data exploration data challenge
-
-\
-
-**Exercise 7**  
 
 * Create workflow op orde maken
 * Amsterdam file swappen voor bijv. New York URLs en dan nogmaals `make` runnen
@@ -159,14 +178,17 @@ Please follow the guidelines below:
 
 | File | Description | Phase | 
 | ---- | ---------- | ------ | 
-| `download.R` | Stores the data for a variety of dates | Input | 
-| `clean.R` | XXXXXXX | Transformation | 
-| `regression.R` | XXXXXXX | Output | 
-| `plot.R` | XXXX | Output | 
+| `download.R` | Downloads the data from Inside Airbnb and stores as csv format | Input | 
+| `clean.R` | Preprocesses the raw data into an aggregated format ready for analysis and visualisation  | Transformation | 
+| `pivot_table.R` | Create a pivot table for the number of reviews by region across time | Output | 
+| `plot_all.R` | Create a line chart for the total number of reviews in a city across time | Output | 
+| `plot_Amsterdam.R` | Create a line chart for the number of reviews for the top 3 neighborhoods in Amsterdam | Output | 
 
 \
 
-**Exercise 8**  
+**Exercise 7**  
+
+* Waarom is December 2020 lager dan verwacht kan worden? (niet een volledige maand)
 
 * Regressie coefficienten interpreteren en onderzoeksvraag beantwoorden
 * Vergelijking tussen de verschillende neighborhoods
@@ -177,6 +199,10 @@ Please follow the guidelines below:
 
 Follow-up questions: 
 
+
+* Simple lagged timeseries model
+  * Bookings = bookings 12 months ago + .. + price + room type dummy + COVID dummy
+  * Export results with stargazer library (link to building block)
 * Approximate estimated income / month
 * Do hosts stick to the rental policy imposed by the city of Amsterdam (30 days / year max.)?
 
