@@ -90,6 +90,8 @@ R < download.R --save
 
 \
 
+---
+
 ### 2. Transformation
 
 As the author of Inside Airbnb notes, guests may leave a review after their stay, and these can be used as an indicator for the number of bookings. Although only verified guests can review listings, it is unlikely that every guest will take the time to write one. In reality, the number of bookings will thus exceed the number of reviews. 
@@ -133,12 +135,9 @@ Please follow the guidelines below:
 
 \
 
-### 3. Output
-
 **Exercise 5**   
-Create the following three deliverables: 
+If we want to compare neighbourhoods side by side (e.g., Centrum-West vs De Pijp) in, for example, a plot we need to transform the data from a long format into a wide format. More specifically, we are after a data structure in which the horizontal column headers are the neighbourhoods and the rows the dates:
 
-1. A pivot table that has the following format (vertical: dates, horizontal: neighbourhoods). Store it as `pivot_table.csv` in `gen/analysis`. 
 
 | date | Bijlmer-Centrum | Bijlmer-Oost | ... | Zuid | 
 | :--- | :--- |:--- |:--- | :--- |
@@ -147,10 +146,26 @@ Create the following three deliverables:
 | ... | ... | ... | ... | ... |
 | 2020-12-01 | ... | ... | ... | ... |
 
+\
+
+Import the data from `gen/data-preparatin/aggregated_df.csv`, reshape the data into wide format and store the result as `pivot_table.csv` in `gen/data-preparation`. 
 
 \
 
-2. A time-series plot that shows the total number of reviews over time (across all neighborhoods). Add a plot title and axes labels to make your graph easier to read. Store it as `plot_all.pdf` in `gen/analysis`.
+---
+
+
+### 3. Output
+
+Finally, it's time to turn our generated files into plots which we can use for our analysis. First, we create the R scripts to create the plots. Second, we automate the entire pipeline using `make`. 
+
+**Exercise 6**   
+Create the following two deliverables (`plot_all.pdf`, `plot_Amsterdam.pdf`): 
+
+\
+
+**`plot_all.R`**  
+1. A time-series plot that shows the total number of reviews over time (across all neighborhoods). Add a plot title and axes labels to make your graph easier to read. Store it as `plot_all.pdf` in `gen/plots`.
 
 * Import the data from `gen/data-preparation/aggregated_df.csv`
 * Convert the `date` column into date format.
@@ -160,14 +175,34 @@ Create the following three deliverables:
 
 \
 
-3. A time-series plot that shows the total number of reviews over time for the top 3 neighborhoods (Centrum-West, De Pijp - Rivierenbuurt, and De Baarsjes - Oud-West). Add a plot title, axes labels, and a legend to make your graph easier to read. Store it as `plot_Amsterdam.pdf` in `gen/analysis`.
+**`plot_Amsterdam.R`**  
+2. A time-series plot that shows the total number of reviews over time for the top 3 neighborhoods (Centrum-West, De Pijp - Rivierenbuurt, and De Baarsjes - Oud-West). Add a plot title, axes labels, and a legend to make your graph easier to read. Store it as `plot_Amsterdam.pdf` in `gen/plots`.
 
-* Import the data from `gen/data-analysis/pivot_table.csv`
+* Import the data from `gen/data-preparation/pivot_table.csv`
 * Convert the `date` column into date format.
 * Plot the chart and store the visualisation.
 
+\
 
-**Exercise 6**  
+**Exercise 7**  
+Up to this point, you should have created the following five R scripts: 
+
+| File | Description | Phase | 
+| ---- | ---------- | ------ | 
+| `download.R` | Downloads the data from Inside Airbnb and stores as csv format | Input | 
+| `clean.R` | Preprocesses the raw data into an aggregated format ready for analysis and visualisation  | Transformation | 
+| `pivot_table.R` | Create a pivot table for the number of reviews by region across time | Transformation | 
+| `plot_all.R` | Create a line chart for the total number of reviews in a city across time | Output | 
+| `plot_Amsterdam.R` | Create a line chart for the number of reviews for the top 3 neighborhoods in Amsterdam | Output | 
+
+\
+
+As you've worked through the set of exercises, you've repeatedly built on preliminary results. For example, the plot for the top 3 cities in Amsterdam could only be created once the `pivot_table.csv` file had been generated. In a similar way, the preprocessing pipeline could only take place once the data had been downloaded. 
+
+\
+
+Think about all underlying dependencies and create a `makefile` in the root directory.
+* Add a cl
 
 * Create workflow op orde maken
 * Amsterdam file swappen voor bijv. New York URLs en dan nogmaals `make` runnen
@@ -175,18 +210,9 @@ Create the following three deliverables:
 
 [FIGURE OF MAKE WORKFLOW]
 
-
-| File | Description | Phase | 
-| ---- | ---------- | ------ | 
-| `download.R` | Downloads the data from Inside Airbnb and stores as csv format | Input | 
-| `clean.R` | Preprocesses the raw data into an aggregated format ready for analysis and visualisation  | Transformation | 
-| `pivot_table.R` | Create a pivot table for the number of reviews by region across time | Output | 
-| `plot_all.R` | Create a line chart for the total number of reviews in a city across time | Output | 
-| `plot_Amsterdam.R` | Create a line chart for the number of reviews for the top 3 neighborhoods in Amsterdam | Output | 
-
 \
 
-**Exercise 7**  
+**Exercise 8**  
 
 * Waarom is December 2020 lager dan verwacht kan worden? (niet een volledige maand)
 

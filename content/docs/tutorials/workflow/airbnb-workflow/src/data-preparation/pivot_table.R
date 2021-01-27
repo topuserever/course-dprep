@@ -8,4 +8,4 @@ df <- read.csv("../../gen/data-preparation/aggregated_df.csv")
 df_pivot <- df %>% dcast(date ~ neighbourhood, fun.aggregate = sum, value.var = "num_reviews")
 
 # export results
-write.csv(df_pivot, "../../gen/analysis/pivot_table.csv")
+write.csv(df_pivot, "../../gen/data-preparation/pivot_table.csv")

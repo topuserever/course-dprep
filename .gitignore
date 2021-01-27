@@ -10,3 +10,5 @@ content/docs/tutorials/version-control/version-control.html
 content/docs/tutorials/data-preparation/songs.csv
 *.csv
 content/docs/tutorials/workflow/airbnb-workflow/src/data-preparation/.RData
+content/docs/tutorials/workflow/airbnb-workflow/.RData
+content/docs/tutorials/workflow/airbnb-workflow/src/data-preparation/.Rhistory
