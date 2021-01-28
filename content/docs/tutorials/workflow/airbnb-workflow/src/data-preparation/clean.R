@@ -1,7 +1,7 @@
 library(dplyr)
 
-reviews <- read.csv("../../data/reviews.csv")
-listings <- read.csv("../../data/listings.csv")
+reviews <- read.csv("data/reviews.csv")
+listings <- read.csv("data/listings.csv")
 
 # convert date column
 reviews$date <- as.Date(reviews$date)
@@ -26,7 +26,7 @@ df_grouped <- df_merged %>%
 df_grouped$date <- as.Date(paste0(df_grouped$year, "-", df_grouped$month, "-01"))
 
 # store the final data frame in `gen/data-preparation` as `aggregated_df.csv`
-write.csv(df_grouped, "../../gen/data-preparation/aggregated_df.csv")
+write.csv(df_grouped, "gen/data-preparation/aggregated_df.csv")
 
 
 

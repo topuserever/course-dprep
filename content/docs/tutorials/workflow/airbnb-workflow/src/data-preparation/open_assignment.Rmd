@@ -17,7 +17,7 @@ For example, [here](http://insideairbnb.com/amsterdam/) is the dashboard for the
 The overarching research question that we aim to investigate is:    
 **How did the Airbnb market in Amsterdam respond to the COVID-19 pandemic in terms of bookings per neighborhood?**
 
-To get to an answer, we need a multitude of input, transformation, and output steps. We'll use `make` to automate our workflows and make them reproducible. As data on Inside Airbnb is updated monthly, our program should still work once new data becomes available or if we change the city. 
+To get to an answer, we need a multitude of input, transformation, and output steps. We'll use `make` to automate our workflows and make them reproducible. As data on Inside Airbnb is updated monthly, our program should still work once new data becomes available or if we change the city from Amsterdam to, for example, New York. 
 
 
 ---
@@ -36,11 +36,10 @@ The listing ID and the date of the review. More details about the review such as
 **Exercise 1**     
 Before we fully automate our workflows, it is imperative to have a close look at the data. 
 
-1. Set up a directory structure in accordance with these [guidelines](http://tilburgsciencehub.com/workflow/directories/). It should have a `data`, `gen`, and `src` directory and a `data-preparation` subdirectory in `src`.
+1. Set up a directory structure in accordance with these [guidelines](http://tilburgsciencehub.com/workflow/directories/). It should have a `data`, `gen`, and `src` directory and a `data-preparation` subdirectory in `src` and `gen`.
 2. Manually download the most recent version of `listings.csv` and `reviews.csv` listed on [Inside Airbnb](http://insideairbnb.com/get-the-data.html) and store them in the `data` folder.
 3. Create a data report (like you did in Data Challenge 1) .  
-  * Code necessary to read in the data and perform some basic cleaning steps
-  * Generate an overview of the data (e.g., summary statistics, report on missingness, number of observations, etc.)
+  * Read the data into R and generate an overview of the data (e.g., summary statistics, report on missingness, number of observations, etc.).
   * Explore interesting relationships in the data. 
 
 ```{r}
@@ -54,24 +53,24 @@ summary(reviews)
 \
 
 **Solutions**  
-An answer that includes: 
+An answer that includes the following elements: 
 
 * The number of listings is (+/- 18K) is somewhat lower than the figure reported in the dashboard. 
 * Most hosts have only one listing but some may account for 84 listings.
-* Some listings received their last review in 2012 which indicates that not all listings may be in use anymore (for 2375 records this field is empty (`NA`) which suggests that they did not receive a review at all. This is confirmed by the number of reviews column (`0`).).
+* Some listings received their last review in 2012 which indicates that not all listings may be in use anymore (for 2375 records this field is empty (`NA`) which suggests that they did not receive a review at all. This is confirmed by the number of reviews column (`0`)).
 * Most listings receive less than a review per month (mean: 0.63, median: 0.30).
 * The neighborhoods with the most listings are located in De Baarsjes - Oud-West, De Pijp - Rivierenbuurt, and Centrum-West. The `neighborhood_group` column does not contain any information and could therefore be removed.
 * For half of the listings, the daily rate falls somewhere in between €94 and €180  (1st and 3rd quantile).
 * The reviews file includes all historic reviews (not just the new ones since the last data release).
 * Reviews are written between March 2009 and December 2020. 
-* The total number of reviews (+/- 452K) that are grouped by listing (16K). Given the total number of listings on Airbnb, it implies that not all listings have been reviewed.
+* The total number of reviews (+/- 452K) are grouped by listing (16K). Given the total number of listings on Airbnb, it implies that not all listings have been reviewed (see comment above).
 
 Note that the figures and years mentioned above are based on the dataset from December 2020 and thus may deviate from more recent versions of the dataset. 
 
 \
 
 **Exercise 2**   
-Say that you want to share your work with others, you could essentially give them access to both the R file (`src` folder) and the two csv-files (`data` folder). Yet if you work with big data sets, you may run into problems that cannot be easily shared through email, Github, or Google Drive. For that reason, it's recommended to create a script that pulls in the data directly from the source itself which is what you're going to do in this exercise.
+Say that you want to share your work with others, you could essentially give them access to both the R file (`src` folder) and the two csv-files (`data` folder). Yet if you work with big data sets, you may run into problems: the data becomes too large to share through email, Github, or Google Drive. For that reason, it's recommended to create a script that pulls in the data directly from the source itself which is what you're going to do in this exercise.
 
 1. Create a new file `download.R` and save it in the `src/data-preparation` folder.
 2. Look up the URL of the download links of the most recent version of the `listings.csv` and `reviews.csv` datasets.
@@ -86,7 +85,7 @@ download.file(url = url, destfile = filename)
 R < download.R --save
 ```
 
-![](./images/download_data.gif){width=50%}
+![](./images/download_data.gif){width=60%}
 
 \
 
@@ -124,7 +123,7 @@ Create a file `clean.R` that loads the data from the `data` directory and reshap
 | 2020-12-01 | Zuid | 23 |  
 
 
-Please follow the guidelines below:  
+Please adhere to the step-by-step guidelines below:  
 
 * Convert the date column of `reviews` into date/time format.
 * Filter for `reviews` published since January 1st 2015
@@ -136,7 +135,7 @@ Please follow the guidelines below:
 \
 
 **Exercise 5**   
-If we want to compare neighbourhoods side by side (e.g., Centrum-West vs De Pijp) in, for example, a plot we need to transform the data from a long format into a wide format. More specifically, we are after a data structure in which the horizontal column headers are the neighbourhoods and the rows the dates:
+If we want to compare neighbourhoods side by side (e.g., Centrum-West vs De Pijp) in, for example, a plot we need to transform the data from a *long* format into a *wide* format. More specifically, we are after a data structure in which the horizontal column headers are the neighbourhoods and the rows the dates:
 
 
 | date | Bijlmer-Centrum | Bijlmer-Oost | ... | Zuid | 
@@ -165,7 +164,7 @@ Create the following two deliverables (`plot_all.pdf`, `plot_Amsterdam.pdf`):
 \
 
 **`plot_all.R`**  
-1. A time-series plot that shows the total number of reviews over time (across all neighborhoods). Add a plot title and axes labels to make your graph easier to read. Store it as `plot_all.pdf` in `gen/plots`.
+A time-series plot that shows the total number of reviews over time (across all neighborhoods). Add a plot title and axes labels to make your graph easier to read. Store it as `plot_all.pdf` in `gen/plots` (don't forget to add a `plots` folder in `gen`!).
 
 * Import the data from `gen/data-preparation/aggregated_df.csv`
 * Convert the `date` column into date format.
@@ -176,7 +175,7 @@ Create the following two deliverables (`plot_all.pdf`, `plot_Amsterdam.pdf`):
 \
 
 **`plot_Amsterdam.R`**  
-2. A time-series plot that shows the total number of reviews over time for the top 3 neighborhoods (Centrum-West, De Pijp - Rivierenbuurt, and De Baarsjes - Oud-West). Add a plot title, axes labels, and a legend to make your graph easier to read. Store it as `plot_Amsterdam.pdf` in `gen/plots`.
+A time-series plot that shows the total number of reviews over time for the top 3 neighborhoods (Centrum-West, De Pijp - Rivierenbuurt, and De Baarsjes - Oud-West). Add a plot title, axes labels, and a legend to make your graph easier to read. Store it as `plot_Amsterdam.pdf` in `gen/plots`.
 
 * Import the data from `gen/data-preparation/pivot_table.csv`
 * Convert the `date` column into date format.
@@ -197,46 +196,38 @@ Up to this point, you should have created the following five R scripts:
 
 \
 
-As you've worked through the set of exercises, you've repeatedly built on preliminary results. For example, the plot for the top 3 cities in Amsterdam could only be created once the `pivot_table.csv` file had been generated. In a similar way, the preprocessing pipeline could only take place once the data had been downloaded. 
+As you've worked through the set of exercises, you've repeatedly built on preliminary results. For example, the plot for the top 3 cities in Amsterdam (`plot_Amsterdam.pdf`) could only be created once the `pivot_table.csv` file had been generated. In a similar way, the preprocessing pipeline (`clean.R`) could only take place once the data (`listings.csv` & `reviews.csv`) had been downloaded. These dependencies have been depicted in the figure below.
 
 \
 
-Think about all underlying dependencies and create a `makefile` in the root directory.
-* Add a cl
+![](./images/dependencies.png){width=55%}
 
-* Create workflow op orde maken
-* Amsterdam file swappen voor bijv. New York URLs en dan nogmaals `make` runnen
-* Vraag over dependencies binnen Make 
+\
 
-[FIGURE OF MAKE WORKFLOW]
+Revisit the [study notes](http://tilburgsciencehub.com/workflow/automation/) on *"Automating your Pipeline"* and write a `makefile` that captures the end-to-end process (from `download.R` to `plot_all.pdf` & `plot_Amsterdam.pdf`). Also, add an `all` and `clean` phony target.
 
 \
 
 **Exercise 8**  
+Swap the `url_listings` and `url_reviews` for a historical dataset of Amsterdam from the year 2016 (gather the links from the "[show archived page](http://insideairbnb.com/get-the-data.html)"). Run `make` again in the root directory. 
+\
 
-* Waarom is December 2020 lager dan verwacht kan worden? (niet een volledige maand)
-
-* Regressie coefficienten interpreteren en onderzoeksvraag beantwoorden
-* Vergelijking tussen de verschillende neighborhoods
-* Kort ingaan op limitaties van studie
-
-
-
-
-Follow-up questions: 
-
-
-* Simple lagged timeseries model
-  * Bookings = bookings 12 months ago + .. + price + room type dummy + COVID dummy
-  * Export results with stargazer library (link to building block)
-* Approximate estimated income / month
-* Do hosts stick to the rental policy imposed by the city of Amsterdam (30 days / year max.)?
-
-
+Do the same for a recent Airbnb dataset from New York.  If done correctly, it should not take more than a minute (power to automation!). Do your workflows still run as expected? How about the `plot_Amsterdam.R` file? Why is that?
 
 
 \
 
+**Exercise 9**  
+Study the output files and formulate an answer to our initial research question as well as the following subquestions:
+
+* Did all neighbourhoods in Amsterdam suffer equally from the pandemic? 
+* Why is the number of listings in December 2020 remarkably low? 
+* Discuss the methods you can use to test whether the identified relationship is statistically significant. How would you define the regression model? (no need to implement it here!)
+* Comment on the limitations of our approach and come up with strategies to overcome them. 
+
+
+
+<!--
 \
 
 
@@ -282,3 +273,22 @@ f = niet beschikbaar
 * woningen mogen niet structureel worden onttrokken
 
 
+
+Follow-up questions: 
+
+
+* Simple lagged timeseries model
+  * Bookings = bookings 12 months ago + .. + price + room type dummy + COVID dummy
+  * Export results with stargazer library (link to building block)
+* Approximate estimated income / month
+* Do hosts stick to the rental policy imposed by the city of Amsterdam (30 days / year max.)?
+
+
+
+
+\
+
+\
+
+
+-->
